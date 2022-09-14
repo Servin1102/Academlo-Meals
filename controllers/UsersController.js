@@ -39,8 +39,8 @@ const loginUser = async (req, res, next) => {
     }
 
     //generate token
-    const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+    const token = await jwt.sign({ id: user.id }, "secret", {
+        expiresIn: "30d",
     });
 
     user.password = undefined;

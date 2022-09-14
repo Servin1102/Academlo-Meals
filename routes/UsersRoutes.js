@@ -26,7 +26,7 @@ const { orderExists } = require('../middlewares/OrderMiddlewares');
 
 const router = Express.Router();
 
-router.post('/', createUserValidations, checkValidations, createUser);
+router.post('/signup', createUserValidations, checkValidations, createUser);
 router.post('/login', loginUser);
 
 router.use(protectToken);
