@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models/userModel');
 const { Order } = require('../models/orderModel');
 const { AppError } = require('../utils/AppError');
+const { catchAsync } = require('../utils/catchAsync');
 
 //-------------- get all users ----------------
 const getAllUsers = async (req, res, next) => {
@@ -11,7 +12,7 @@ const getAllUsers = async (req, res, next) => {
 };
 
 //-------------- create User ---------------
-const createUser = async (req, res, next) => {
+const createUser = catchAsync( async (req, res, next) => {
     const { name, email, password, role } = req.body;
 
     const salt = await bcrypt.genSalt(12);
@@ -27,10 +28,10 @@ const createUser = async (req, res, next) => {
     newUser.password = undefined;
 
     res.status(201).json({ newUser });
-};
+});
 
 //-------------- Login User -------------------------
-const loginUser = async (req, res, next) => {
+const loginUser = catchAsync( async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ where: { email, status: 'active' } });
 
@@ -45,35 +46,35 @@ const loginUser = async (req, res, next) => {
 
     user.password = undefined;
     res.status(200).json({ token, user });
-};
+});
 
 //------------ update user ----------------------------
-const updateUser = async (req, res, next) => {
+const updateUser = catchAsync( async (req, res, next) => {
     const { user } = req;
     const { name, email } = request.body;
     await user.update({ name, email });
     res.status(200).json({ status: 'succes' });
-};
+});
 
 //------------- delete user --------------------------
-const deleteUser = async (req, res, next) => {
+const deleteUser = catchAsync( async (req, res, next) => {
     const { user } = req;
     await user.update({ status: 'deleted' });
     res.status(200).json({ status: 'succes' });
-};
+});
 
 //------------- get orders user--------------------------------
-const getOrdersUser = async (req, res, next) => {
+const getOrdersUser = catchAsync( async (req, res, next) => {
     const { sessionUser } = req;
     const order = await Order.findAll({ where: { userId: sessionUser.id } });
     res.status(200).json({ order });
-};
+});
 
 //------------- get order id user ---------------------------
-const getOrdersIdUser = async (req, res, next) => {
+const getOrdersIdUser = catchAsync( async (req, res, next) => {
     const { order } = req;
     res.status(200).json({ order });
-};
+});
 
 module.exports = {
     createUser,

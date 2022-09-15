@@ -1,16 +1,17 @@
 const { Order } = require('../models/orderModel');
 const { Meal } = require('../models/mealModel');
 const { AppError } = require('../utils/appError');
+const { catchAsync } = require('../utils/catchAsync');
 
-//----------------- get all order user ----------------------------
-const getAllOrdersUsers = async (req, res, next) => {
+//get all order user
+const getAllOrdersUsers = catchAsync( async (req, res, next) => {
     const { sessionUser } = req;
     const orders = await Order.findAll({ where: { userId: sessionUser.id } });
     res.status(200).json({ orders });
-};
+});
 
-//----------------- create new order -------------------------------
-const createOrder = async (req, res, next) => {
+// create new order 
+const createOrder = catchAsync( async (req, res, next) => {
     const { quantity, mealId } = req.body;
     const meal = await Meal.findOne({ where: { id: mealId } });
 
@@ -27,20 +28,20 @@ const createOrder = async (req, res, next) => {
     });
 
     res.status(201).json({ newOrder });
-};
+});
 
 //------------------- update order -----------------------------
-const updateOrder = async (req, res, next) => {
+const updateOrder = catchAsync(async (req, res, next) => {
     const { order } = req;
     await order.update({ status: 'completed' });
     res.status(201).json({ status: 'succes' });
-};
+});
 
 //------------------ delete order ------------------------------
-const deleteOrder = async (req, res, next) => {
+const deleteOrder = catchAsync( async (req, res, next) => {
     const { order } = req;
     await order.update({ status: 'cancelled' });
     res.status(201).json({ status: 'succes' });
-};
+});
 
 module.exports = { getAllOrdersUsers, createOrder, updateOrder, deleteOrder };
