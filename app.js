@@ -5,6 +5,7 @@ const { usersRoutes } = require('./routes/UsersRoutes');
 const { restaurantRoutes } = require('./routes/RestaurantRoutes');
 const { mealRoutes } = require('./routes/MealRoutes');
 const { orderRoutes } = require('./routes/OrderRoutes');
+const { globalErrorHandler } = require('./controllers/ErrorController');
 
 //
 const app = express();
@@ -21,11 +22,6 @@ app.use('/orders', orderRoutes);
 
 
 //catch non-existing endpoints
-app.all('*', (req,res) =>{
-    res.status(404).json({
-        status:'error',
-        message: `${req.method} ${req.url} does not exists in our server`
-    })
-})
+app.use('*', globalErrorHandler)
 
 module.exports = { app}
