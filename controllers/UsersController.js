@@ -40,7 +40,7 @@ const loginUser = catchAsync( async (req, res, next) => {
     }
 
     //generate token
-    const token = await jwt.sign({ id: user.id }, "secret", {
+    const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: "30d",
     });
 
